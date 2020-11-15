@@ -11,6 +11,16 @@ main(){
 	char *argv[50];
 	int narg;
 	pid_t pid;
+	
+	struct sigaction sigint;
+	struct sigaction sigquit;
+
+	sigint.sa_handler = handler_Ctrl_C;
+	sigquit.sa_handler = handler_Ctrl_Z;
+	sigfillset(&(sigint.sa_mask));
+	sigfillset(&(sigquit.sa_mask));
+	sigaction(SIGINT, &sigint, NULL);
+	sigaction(SIGTSTP, &sigquit, NULL);
 
 	while(1){
 		printf("HJYJ_shell> ");
@@ -42,4 +52,16 @@ int getargs(char *cmd, char **argv){
 	}
 	argv[narg] = NULL;
 	return narg;
+}
+
+void handler_Ctrl_C(int signo){
+	int ppid = getppid();
+	printf("Call SIGINT by Ctrl-C!!!\n");
+	kill(ppid, SIGINT);
+}
+
+void handler_Ctrl_Z(int signo){
+	int ppid = getppid();
+	printf("Call SIGQUIT by Ctrl-Z!!!\n");
+	kill(ppid, SIGQUIT);
 }
