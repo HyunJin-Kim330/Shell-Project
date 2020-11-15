@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <sys/types.h>
 
-void handler_Ctrl_C(int), handler_Ctrl_Z(int);
+void handler_Ctrl_C(int), handler_Ctrl_Z(int);  // 핸들러 전방선언
 
 main(){
 	char buf[256];
@@ -12,7 +12,7 @@ main(){
 	int narg;
 	pid_t pid;
 	
-	struct sigaction sigint;
+	struct sigaction sigint;  // sigaction 구조체 선언
 	struct sigaction sigquit;
 
 	sigint.sa_handler = handler_Ctrl_C;
@@ -54,13 +54,13 @@ int getargs(char *cmd, char **argv){
 	return narg;
 }
 
-void handler_Ctrl_C(int signo){
+void handler_Ctrl_C(int signo){  // ctrl-C 핸들러
 	int ppid = getppid();
 	printf("Call SIGINT by Ctrl-C!!!\n");
 	kill(ppid, SIGINT);
 }
 
-void handler_Ctrl_Z(int signo){
+void handler_Ctrl_Z(int signo){  // ctrl-Z 핸들러
 	int ppid = getppid();
 	printf("Call SIGQUIT by Ctrl-Z!!!\n");
 	kill(ppid, SIGQUIT);
